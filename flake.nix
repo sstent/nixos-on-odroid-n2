@@ -53,13 +53,13 @@
             '';
             };
 
-          boot.loader.grub.enable = false;
+          #boot.loader.grub.enable = false;
           boot.loader.kboot-conf.enable = true;
-          boot.kernelParams = [ "console=ttyAML0,115200n8" ];
-          boot.consoleLogLevel = 7;
+          boot.kernelParams = [ "console=tty1,115200n8" ];
+          #boot.consoleLogLevel = 7;
           # need latest kernel for the n2+ device tree blob
           #####boot.kernelPackages = pkgs.linuxPackages_latest; breasks stuff
-          #boot.kernelPackages = lib.mkForce config.boot.zfs.package.latestCompatibleLinuxPackages;
+          boot.kernelPackages = lib.mkForce config.boot.zfs.package.latestCompatibleLinuxPackages;
 
 
 
