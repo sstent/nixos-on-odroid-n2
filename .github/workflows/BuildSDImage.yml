@@ -1,8 +1,11 @@
 name: Build OS Image
 on:
   workflow_dispatch:
-  #push:
-
+  push:
+    branches: [ master ]
+    paths:
+      - '*'
+      - '.github/workflows/BuildSDImage.yml'
 jobs:
   build-default-image:
     name: Build OS image
