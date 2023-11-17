@@ -33,7 +33,7 @@
           imports = [
             #./sd-image.nix
             # ./default.nix
-            #./kboot-conf
+            ./kboot-conf
             # "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix"
             "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
 
@@ -41,22 +41,22 @@
 
           sdImage = {
             compressImage = false;
-            # populateFirmwareCommands = let
-            #   configTxt = pkgs.writeText "README" ''
-            #   Nothing to see here. This empty partition is here because I don't know how to turn its creation off.
-            #   '';
-            # in ''
-            #   cp ${configTxt} firmware/README
-            # '';
-            # populateRootCommands = ''
-            #   ${config.boot.loader.kboot-conf.populateCmd} -c ${config.system.build.toplevel} -d ./files/kboot.conf
-            # '';
+            populateFirmwareCommands = let
+              configTxt = pkgs.writeText "README" ''
+              Nothing to see here. This empty partition is here because I don't know how to turn its creation off.
+              '';
+            in ''
+              cp ${configTxt} firmware/README
+            '';
+            populateRootCommands = ''
+              ${config.boot.loader.kboot-conf.populateCmd} -c ${config.system.build.toplevel} -d ./files/kboot.conf
+            '';
             };
 
           boot.loader.grub.enable = false;
           boot.loader.kboot-conf.enable = true;
-          #boot.kernelParams = [ "console=ttyAML0,115200n8" ];
-          #boot.consoleLogLevel = 7;
+          boot.kernelParams = [ "console=ttyAML0,115200n8" ];
+          boot.consoleLogLevel = 7;
           # need latest kernel for the n2+ device tree blob
           #####boot.kernelPackages = pkgs.linuxPackages_latest; breasks stuff
           #boot.kernelPackages = lib.mkForce config.boot.zfs.package.latestCompatibleLinuxPackages;
