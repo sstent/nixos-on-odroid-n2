@@ -28,7 +28,8 @@
       system = "aarch64-linux";
 
       modules = [
-        {
+      ({ pkgs, config, ... }: {
+
           imports = [
             #./sd-image.nix
             # ./default.nix
@@ -64,7 +65,7 @@
             settings.PermitRootLogin = "yes";
           };
           users.extraUsers.root.initialPassword = lib.mkForce "test123";
-        }
+        })
       ];
     };
 
