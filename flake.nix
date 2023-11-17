@@ -31,6 +31,7 @@
         {
           imports = [
             #./sd-image.nix
+            ./default.nix
             "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix"
 
           ];
