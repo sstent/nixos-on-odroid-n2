@@ -33,7 +33,7 @@
           imports = [
             #./sd-image.nix
             # ./default.nix
-            #./kboot-conf
+            ./kboot-conf
             # "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix"
             "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
 
@@ -54,7 +54,7 @@
             };
 
           boot.loader.grub.enable = false;
-          #boot.loader.kboot-conf.enable = true;
+          boot.loader.kboot-conf.enable = true;
           #boot.kernelParams = [ "console=ttyAML0,115200n8" ];
           #boot.consoleLogLevel = 7;
           # need latest kernel for the n2+ device tree blob
