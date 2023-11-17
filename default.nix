@@ -9,5 +9,5 @@
 	boot.consoleLogLevel = 7;
 	# need latest kernel for the n2+ device tree blob
 	boot.kernelPackages = pkgs.linuxPackages_latest;
-	hardware.deviceTree.name = "amlogic/meson-g12b-odroid-n2-plus.dtb";
+	#hardware.deviceTree.name = "amlogic/meson-g12b-odroid-n2-plus.dtb";
 }
