@@ -2,8 +2,8 @@
   inputs = {
     # nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
     # nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
-    #nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    #nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
   };
 
@@ -31,8 +31,6 @@
       ({ pkgs, config, ... }: {
 
           imports = [
-            #./sd-image.nix
-            # ./default.nix
             ./kboot-conf
             # "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix"
             "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
@@ -55,14 +53,24 @@
 
           #boot.loader.grub.enable = false;
           boot.loader.kboot-conf.enable = true;
-          boot.kernelParams = [ "console=tty1,115200n8" ];
-          #boot.consoleLogLevel = 7;
-          # need latest kernel for the n2+ device tree blob
-          #####boot.kernelPackages = pkgs.linuxPackages_latest; breasks stuff
-          boot.kernelPackages = lib.mkForce config.boot.zfs.package.latestCompatibleLinuxPackages;
+          # Use kernel >6.6 
+          boot.kernelPackages = pkgs.linuxPackages_latest;
+          # Stop ZFS breasking the build
+          boot.supportedFilesystems = lib.mkForce [ "btrfs" "cifs" "f2fs" "jfs" "ntfs" "reiserfs" "vfat" "xfs" ];
 
-
-
+          # I'm not completely sure if some of these could be omitted,
+          # but want to make sure disk access works
+          boot.initrd.availableKernelModules = [
+            "nvme"
+            "nvme-core"
+            "phy-rockchip-naneng-combphy"
+            "phy-rockchip-snps-pcie3"
+          ];
+          # Petitboot uses this port and baud rate on the boards serial port,
+          # it's probably good to keep the options same for the running
+          # kernel for serial console access to work well
+          boot.kernelParams = [ "console=ttyS2,1500000" ];       
+          hardware.deviceTree.name = "rockchip/rk3568-odroid-m1.dtb";
           services.openssh = {
             enable = true;
             settings.PermitRootLogin = "yes";

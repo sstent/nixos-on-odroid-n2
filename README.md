@@ -1,8 +1,10 @@
-# NixOS on ODROID-N2
+# NixOS on ODROID-M1
 
-These are configuration files which make it easier to set up and maintain a NixOS installation on an ODROID-N2+ single-board computer.
+(based on https://github.com/povik/nixos-on-odroid-n2 and hellabyte's work here https://discourse.nixos.org/t/newbie-installs-nixos-on-an-arm-sbc-or-how-patience-is-a-virtue/35020)
 
-The system is set up to be loaded through Petitboot, which means the physical boot switch on the board must be in the 'SPI' position (the ODROID's are shipped with Petitboot installed in the internal SPI flash memory). Petitboot reads kernel path and boot options from a `/kboot.conf` file.
+These are configuration files which make it easier to set up and maintain a NixOS installation on an ODROID-M1 single-board computer.
+
+The system is set up to be loaded through Petitboot.
 
 Kernel is mainline.
 
@@ -12,23 +14,9 @@ Patches are welcome!
 
 On an aarch64 system (or with aarch64 emulation):
 
-    nix-build '<nixos/nixos>' -I nixos-config=./sd-image.nix -A config.system.build.sdImage
+`nix build .#images.m1`
 
-## First configuration
+On an aarch64 system:
 
-After flashing the image and booting it up on the ODROID:
+`nix build --option system aarch64-linux --option sandbox false .#images.m1`
 
-    nixos-generate-config # populates /etc/nixos/ with empty configuration
-    nix-env -iA nixos.gitFull
-    cd /etc/nixos
-    git clone https://github.com/povik/nixos-on-odroid-n2.git
-
-    # add ./nixos-on-odroid-n2 as an import in configuration.nix, modify the configuration in other ways
-
-    nixos-rebuild switch
-
-...and you are set!
-
-## Known Bugs
-
- * Reboots seem not to work. The system shuts down but then it's stuck and does not restart.
