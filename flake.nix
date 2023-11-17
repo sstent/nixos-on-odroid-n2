@@ -30,12 +30,24 @@
       modules = [
         {
           imports = [
-            ./sd-image.nix
+            #./sd-image.nix
+            "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix"
+
           ];
 
-          # do not compress to zst
-          sdImage.compressImage = false;
-
+          sdImage = {
+            compressImage = false;
+            populateFirmwareCommands = let
+              configTxt = pkgs.writeText "README" ''
+              Nothing to see here. This empty partition is here because I don't know how to turn its creation off.
+              '';
+            in ''
+              cp ${configTxt} firmware/README
+            '';
+            populateRootCommands = ''
+              ${config.boot.loader.kboot-conf.populateCmd} -c ${config.system.build.toplevel} -d ./files/kboot.conf
+            '';
+            };
           services.openssh = {
             enable = true;
             settings.PermitRootLogin = "yes";
